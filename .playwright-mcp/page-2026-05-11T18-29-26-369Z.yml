@@ -1,0 +1,85 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]: PLATZI
+      - generic [ref=e5]: FLIX
+      - generic [ref=e6]: CURSOS
+    - generic [ref=e7]: PLATZI
+    - generic [ref=e8]: FLIX
+    - main [ref=e9]:
+      - generic [ref=e10]:
+        - link [ref=e11] [cursor=pointer]:
+          - /url: /course/curso-de-react
+          - article [ref=e12]:
+            - img "Curso de React" [ref=e14]
+            - generic [ref=e15]:
+              - heading "Curso de React" [level=2] [ref=e16]
+              - paragraph [ref=e17]: Aprende React desde cero hasta convertirte en un desarrollador profesional
+              - radiogroup [ref=e18]:
+                - generic "1 estrellas" [ref=e19]:
+                  - generic [ref=e20]: ☆
+                  - generic [ref=e21]: ★
+                - generic "2 estrellas" [ref=e22]:
+                  - generic [ref=e23]: ☆
+                  - generic [ref=e24]: ★
+                - generic "3 estrellas" [ref=e25]:
+                  - generic [ref=e26]: ☆
+                  - generic [ref=e27]: ★
+                - generic "4 estrellas" [ref=e28]:
+                  - generic [ref=e29]: ☆
+                  - generic [ref=e30]: ★
+                - generic "5 estrellas" [ref=e31]:
+                  - generic [ref=e32]: ☆
+                  - generic [ref=e33]: ★
+                - generic [ref=e34]: (2)
+        - link [ref=e35] [cursor=pointer]:
+          - /url: /course/curso-de-python
+          - article [ref=e36]:
+            - img "Curso de Python" [ref=e38]
+            - generic [ref=e39]:
+              - heading "Curso de Python" [level=2] [ref=e40]
+              - paragraph [ref=e41]: Domina Python y sus frameworks más populares
+              - radiogroup [ref=e42]:
+                - generic "1 estrellas" [ref=e43]:
+                  - generic [ref=e44]: ☆
+                  - generic [ref=e45]: ★
+                - generic "2 estrellas" [ref=e46]:
+                  - generic [ref=e47]: ☆
+                  - generic [ref=e48]: ★
+                - generic "3 estrellas" [ref=e49]:
+                  - generic [ref=e50]: ☆
+                  - generic [ref=e51]: ★
+                - generic "4 estrellas" [ref=e52]:
+                  - generic [ref=e53]: ☆
+                  - generic: ★
+                - generic "5 estrellas" [ref=e54]:
+                  - generic [ref=e55]: ☆
+                  - generic: ★
+                - generic [ref=e56]: (1)
+        - link [ref=e57] [cursor=pointer]:
+          - /url: /course/curso-de-javascript
+          - article [ref=e58]:
+            - img "Curso de JavaScript" [ref=e60]
+            - generic [ref=e61]:
+              - heading "Curso de JavaScript" [level=2] [ref=e62]
+              - paragraph [ref=e63]: JavaScript moderno y sus mejores prácticas
+              - radiogroup [ref=e64]:
+                - generic "1 estrellas" [ref=e65]:
+                  - generic [ref=e66]: ☆
+                  - generic [ref=e67]: ★
+                - generic "2 estrellas" [ref=e68]:
+                  - generic [ref=e69]: ☆
+                  - generic [ref=e70]: ★
+                - generic "3 estrellas" [ref=e71]:
+                  - generic [ref=e72]: ☆
+                  - generic [ref=e73]: ★
+                - generic "4 estrellas" [ref=e74]:
+                  - generic [ref=e75]: ☆
+                  - generic [ref=e76]: ★
+                - generic "5 estrellas" [ref=e77]:
+                  - generic [ref=e78]: ☆
+                  - generic: ★
+                - generic [ref=e79]: (1)
+  - alert [ref=e80]
+  - button "Open Next.js Dev Tools" [ref=e86] [cursor=pointer]:
+    - img [ref=e87]
