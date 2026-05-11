@@ -23,9 +23,15 @@ class Course(BaseModel):
     
     # One-to-many relationship with Lesson
     lessons = relationship(
-        "Lesson", 
+        "Lesson",
         back_populates="course",
         cascade="all, delete-orphan"
+    )
+
+    ratings = relationship(
+        "CourseRating",
+        back_populates="course",
+        cascade="save-update, merge"
     )
     
     def __repr__(self):

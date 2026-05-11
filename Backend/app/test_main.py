@@ -276,4 +276,109 @@ class TestContractCompliance:
         assert course["name"] == "Curso de React"
         assert course["description"] == "Curso de React"
         assert course["thumbnail"] == "https://via.placeholder.com/150"
-        assert course["slug"] == "curso-de-react" 
+        assert course["slug"] == "curso-de-react"
+
+
+MOCK_RATING_STATS = {"average_rating": 4.2, "total_ratings": 10}
+MOCK_RATING = {"id": 1, "course_id": 1, "user_id": 5, "rating": 4}
+
+
+class TestRatingsEndpoints:
+    """Tests for /courses/{slug}/ratings endpoints"""
+
+    def test_get_rating_stats_success(self, client, mock_course_service):
+        # Arrange
+        mock_course_service.get_course_rating_stats.return_value = MOCK_RATING_STATS
+        # Act
+        response = client.get("/courses/curso-de-react/ratings")
+        # Assert
+        assert response.status_code == 200
+        data = response.json()
+        assert "average_rating" in data
+        assert "total_ratings" in data
+        assert isinstance(data["average_rating"], float)
+        assert isinstance(data["total_ratings"], int)
+        mock_course_service.get_course_rating_stats.assert_called_once_with("curso-de-react")
+
+    def test_get_rating_stats_course_not_found(self, client, mock_course_service):
+        # Arrange
+        mock_course_service.get_course_rating_stats.return_value = None
+        # Act
+        response = client.get("/courses/no-existe/ratings")
+        # Assert
+        assert response.status_code == 404
+
+    def test_add_rating_success(self, client, mock_course_service):
+        # Arrange
+        mock_course_service.add_course_rating.return_value = MOCK_RATING
+        # Act
+        response = client.post("/courses/curso-de-react/ratings", json={"user_id": 5, "rating": 4})
+        # Assert
+        assert response.status_code == 201
+        data = response.json()
+        assert data["rating"] == 4
+        assert data["user_id"] == 5
+        mock_course_service.add_course_rating.assert_called_once_with("curso-de-react", 5, 4)
+
+    def test_add_rating_course_not_found(self, client, mock_course_service):
+        # Arrange
+        mock_course_service.add_course_rating.return_value = None
+        # Act
+        response = client.post("/courses/no-existe/ratings", json={"user_id": 5, "rating": 4})
+        # Assert
+        assert response.status_code == 404
+
+    def test_add_rating_conflict(self, client, mock_course_service):
+        # Arrange
+        mock_course_service.add_course_rating.side_effect = ValueError("conflict")
+        # Act
+        response = client.post("/courses/curso-de-react/ratings", json={"user_id": 5, "rating": 4})
+        # Assert
+        assert response.status_code == 409
+
+    def test_add_rating_invalid_value(self, client, mock_course_service):
+        # Act — rating=6 fuera del rango 1-5
+        response = client.post("/courses/curso-de-react/ratings", json={"user_id": 5, "rating": 6})
+        # Assert — Pydantic rechaza antes de llegar al servicio
+        assert response.status_code == 422
+
+    def test_update_rating_success(self, client, mock_course_service):
+        # Arrange
+        mock_course_service.update_course_rating.return_value = {**MOCK_RATING, "rating": 5}
+        # Act
+        response = client.put("/courses/curso-de-react/ratings/5", json={"user_id": 5, "rating": 5})
+        # Assert
+        assert response.status_code == 200
+        assert response.json()["rating"] == 5
+        mock_course_service.update_course_rating.assert_called_once_with("curso-de-react", 5, 5)
+
+    def test_update_rating_not_found(self, client, mock_course_service):
+        # Arrange
+        mock_course_service.update_course_rating.return_value = None
+        # Act
+        response = client.put("/courses/curso-de-react/ratings/99", json={"user_id": 99, "rating": 3})
+        # Assert
+        assert response.status_code == 404
+
+    def test_update_rating_invalid_value(self, client, mock_course_service):
+        # Act — rating=0 fuera del rango 1-5
+        response = client.put("/courses/curso-de-react/ratings/5", json={"user_id": 5, "rating": 0})
+        # Assert
+        assert response.status_code == 422
+
+    def test_delete_rating_success(self, client, mock_course_service):
+        # Arrange
+        mock_course_service.delete_course_rating.return_value = True
+        # Act
+        response = client.delete("/courses/curso-de-react/ratings/5")
+        # Assert
+        assert response.status_code == 204
+        mock_course_service.delete_course_rating.assert_called_once_with("curso-de-react", 5)
+
+    def test_delete_rating_not_found(self, client, mock_course_service):
+        # Arrange
+        mock_course_service.delete_course_rating.return_value = False
+        # Act
+        response = client.delete("/courses/curso-de-react/ratings/99")
+        # Assert
+        assert response.status_code == 404

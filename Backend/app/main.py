@@ -1,4 +1,5 @@
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, Response
+from pydantic import BaseModel as PydanticBaseModel, Field
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 from app.core.config import settings
@@ -6,6 +7,11 @@ from app.db.base import engine, get_db
 from app.services.course_service import CourseService
 
 app = FastAPI(title=settings.project_name, version=settings.version)
+
+
+class RatingRequest(PydanticBaseModel):
+    user_id: int = Field(..., gt=0)
+    rating: int = Field(..., ge=1, le=5)
 
 
 def get_course_service(db: Session = Depends(get_db)) -> CourseService:
@@ -73,5 +79,40 @@ def get_course_by_slug(slug: str, course_service: CourseService = Depends(get_co
     
     if not course:
         raise HTTPException(status_code=404, detail="Course not found")
-    
+
     return course
+
+
+@app.get("/courses/{slug}/ratings")
+def get_course_rating_stats(slug: str, course_service: CourseService = Depends(get_course_service)) -> dict:
+    stats = course_service.get_course_rating_stats(slug)
+    if stats is None:
+        raise HTTPException(status_code=404, detail="Course not found")
+    return stats
+
+
+@app.post("/courses/{slug}/ratings", status_code=201)
+def add_course_rating(slug: str, body: RatingRequest, course_service: CourseService = Depends(get_course_service)) -> dict:
+    try:
+        result = course_service.add_course_rating(slug, body.user_id, body.rating)
+    except ValueError:
+        raise HTTPException(status_code=409, detail="Rating already exists for this user")
+    if result is None:
+        raise HTTPException(status_code=404, detail="Course not found")
+    return result
+
+
+@app.put("/courses/{slug}/ratings/{user_id}")
+def update_course_rating(slug: str, user_id: int, body: RatingRequest, course_service: CourseService = Depends(get_course_service)) -> dict:
+    result = course_service.update_course_rating(slug, user_id, body.rating)
+    if result is None:
+        raise HTTPException(status_code=404, detail="Rating not found")
+    return result
+
+
+@app.delete("/courses/{slug}/ratings/{user_id}", status_code=204)
+def delete_course_rating(slug: str, user_id: int, course_service: CourseService = Depends(get_course_service)) -> Response:
+    deleted = course_service.delete_course_rating(slug, user_id)
+    if not deleted:
+        raise HTTPException(status_code=404, detail="Rating not found")
+    return Response(status_code=204)
