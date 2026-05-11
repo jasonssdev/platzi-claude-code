@@ -16,4 +16,10 @@ class CourseRating(BaseModel):
         CheckConstraint('rating >= 1 AND rating <= 5', name='chk_rating_range'),
         Index('idx_course_ratings_course_id', 'course_id'),
         Index('idx_course_ratings_user_id', 'user_id'),
+        Index(
+            'uix_course_ratings_active',
+            'course_id', 'user_id',
+            unique=True,
+            postgresql_where=Column('deleted_at').is_(None),
+        ),
     )

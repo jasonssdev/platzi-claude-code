@@ -1,0 +1,70 @@
+.container {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.star {
+  background: none;
+  border: none;
+  padding: 0;
+  line-height: 1;
+  color: color('light-gray');
+  transition: color 0.15s;
+}
+
+.starFilled {
+  color: color('primary');
+}
+
+.starHovered {
+  color: color('primary');
+}
+
+.starWrapper {
+  position: relative;
+  display: inline-block;
+  line-height: 1;
+}
+
+.starBase {
+  display: block;
+  color: color('light-gray');
+}
+
+.starFillLayer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  color: color('primary');
+}
+
+.count {
+  margin-left: 4px;
+  color: color('text-secondary');
+  opacity: 0.7;
+}
+
+.small {
+  font-size: 16px;
+}
+
+.medium {
+  font-size: 24px;
+}
+
+.large {
+  font-size: 32px;
+}
+
+button.star {
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid color('primary');
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+}

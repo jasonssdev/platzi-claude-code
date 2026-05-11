@@ -1,26 +1,25 @@
 // Course types
 export interface Course {
   id: number;
-  title: string;
-  teacher: string;
-  duration: number;
+  name: string;
+  description: string;
   thumbnail: string;
   slug: string;
+  averageRating?: number;
+  totalRatings?: number;
 }
 
 // Class types
 export interface Class {
   id: number;
-  title: string;
+  name: string;
   description: string;
-  video: string;
-  duration: number;
   slug: string;
 }
 
 // Course Detail type
 export interface CourseDetail extends Course {
-  description: string;
+  teacher_id: number[];
   classes: Class[];
 }
 
@@ -46,4 +45,18 @@ export interface Quiz {
 // Favorite types
 export interface FavoriteToggle {
   course_id: number;
+}
+
+export interface CourseRating {
+  id: number;
+  courseId: number;
+  userId: number;
+  rating: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface RatingRequest {
+  userId: number;
+  rating: number;
 }
